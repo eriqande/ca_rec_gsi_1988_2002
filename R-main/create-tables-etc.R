@@ -47,8 +47,10 @@ cwt_slim <- dfg %>%
 
 
 # now, let's enumerate these guys and also compute the range of values of the posterior prob
-cwt_slim %>%
+cwt_table <- cwt_slim %>%
   group_by(repunit, stockname, runame) %>%
   summarise(n = n(), pp_low = min(posterior_prob), pp_hi = max(posterior_prob)) %>%
   ungroup %>%
   arrange(repunit, desc(n))
+
+write.csv(cwt_table, file = "gsi_vs_cwt_table.csv", quote = FALSE, row.names = FALSE)
