@@ -16,3 +16,13 @@ source("R-main/create-tables-etc.R")
 Note that `pp_lo` is the lowest posterior probability (of assignment) of all the fish
 assigned to the repunit from that tag group.  `pp_hi` is the max.  If there is only one
 fish in the group `pp_lo = pp_hi`.
+
+## Test if the doubtful assignment fish are different in composition than the good ones
+```r
+source("R-main/create-tables-etc.R")
+
+# after that do this:
+CHISQ
+
+# and that returns the results of the chi-squared test
+```

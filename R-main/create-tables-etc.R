@@ -54,3 +54,40 @@ cwt_table <- cwt_slim %>%
   arrange(repunit, desc(n))
 
 write.csv(cwt_table, file = "gsi_vs_cwt_table.csv", quote = FALSE, row.names = FALSE)
+
+
+#### Compare assignments of "good_inds" to those that were tossed as "Low-confidence" assignments ####
+
+
+# first, read in the data that we have on the "doubtful_assignments".
+# These are not the ones that had sketchy data quality (wonky internal HZ).
+# These are the ones that had z-scores that were too large and also assignments
+# less than 90% OR data missing from more than 5 loci.  (Presumably, this is what 
+# Eric C did.)
+
+doubtful_inds <- lapply(years, function(x) {
+  foo <- paste("CAhistorical", x, "SW_mjport", sep = "_")
+  bar <- "doubtful_assignment.txt"
+  path <- file.path("stuff_from_crandall/GSIhistorical_edc", foo, bar)
+  read.table(path, header = TRUE, sep = "\t")
+})%>%
+  plyr::ldply(., as.data.frame, .id = "year") %>%
+  tbl_df
+
+# now we count up the assignments in the good inds and sort them and toss out
+# factor levels that were not observed:
+ga_tab <- table(good_ass$repunit) %>% 
+  sort(., decreasing = TRUE)  %>%
+  unclass
+ga_tab <- ga_tab[ga_tab > 0]  # toss out the zeros
+
+di_tab <- table(doubtful_inds$Max.RepU.1)
+
+# make our contingency matrix of counts.  First column is the good_inds and
+# second are the doubtfuls
+cm <- cbind(ga_tab, di_tab[names(ga_tab)])
+cm[is.na(cm)] <- 0
+
+# then, when you do this we see the distribution of 
+# assignments are not significantly different between good and doubtful individuals
+CHISQ <- chisq.test(cm, simulate.p.value = TRUE, B = 10^6)
