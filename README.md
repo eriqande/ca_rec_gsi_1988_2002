@@ -9,7 +9,7 @@ Much of the previous analysis of genetic data was done by Eric Crandall and Javi
 ## Make a table of CWT vs GSI assignments:
 
 ```r
-source("R-main/create-tables-etc.R")
+source("R-main/01-create-tables-etc.R")
 
 # after that you have the file: gsi_vs_cwt_table.csv
 ```
@@ -19,7 +19,7 @@ fish in the group `pp_lo = pp_hi`.
 
 ## Test if the doubtful assignment fish are different in composition than the good ones
 ```r
-source("R-main/create-tables-etc.R")
+source("R-main/01-create-tables-etc.R")
 
 # after that do this:
 CHISQ
